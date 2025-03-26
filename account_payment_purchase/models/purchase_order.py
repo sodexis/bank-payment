@@ -35,9 +35,10 @@ class PurchaseOrder(models.Model):
     @api.model
     def _get_default_supplier_partner_bank(self, partner):
         """This function is designed to be inherited"""
+        bank_ids = partner.bank_ids.filtered(lambda b: not b.company_id or b.company_id == self.company_id)
         return (
-            partner.bank_ids
-            and partner.bank_ids.sorted(lambda bank: not bank.allow_out_payment)[0].id
+            bank_ids
+            and bank_ids.sorted(lambda bank: not bank.allow_out_payment)[0].id
             or False
         )
 
